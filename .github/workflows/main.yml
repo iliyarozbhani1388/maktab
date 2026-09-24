@@ -1,10 +1,10 @@
-name: Maktabkhooneh Automation
+name: Maktabkhooneh Login Test
 
 on:
   workflow_dispatch:
 
 jobs:
-  login:
+  login-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,10 +18,9 @@ jobs:
           pip install playwright
           playwright install --with-deps chromium
 
-      - name: Open Maktabkhooneh
+      - name: Test Login
         run: |
           cat > script.py <<'PY'
-          import os
           from playwright.sync_api import sync_playwright
 
           USERNAME = "09198631546"
@@ -31,15 +30,17 @@ jobs:
               browser = p.chromium.launch(headless=True)
               page = browser.new_page()
 
-              print("Opening Maktabkhooneh...")
-
+              print("Opening website...")
               page.goto(
                   "https://mirza.maktabkhooneh.org/courses",
                   wait_until="networkidle"
               )
 
-              print("Page opened successfully")
-              print("Current URL:", page.url)
+              print("URL:", page.url)
+              print("Title:", page.title())
+
+              # فعلاً فقط صفحه را باز می‌کنیم
+              # بعد از بررسی فرم ورود، فیلدهای صحیح را اضافه می‌کنیم.
 
               browser.close()
           PY
