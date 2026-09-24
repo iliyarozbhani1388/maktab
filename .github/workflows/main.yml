@@ -18,7 +18,7 @@ jobs:
           pip install playwright
           playwright install --with-deps chromium
 
-      - name: Test Login
+      - name: Login to Maktabkhooneh
         run: |
           cat > script.py <<'PY'
           from playwright.sync_api import sync_playwright
@@ -30,17 +30,31 @@ jobs:
               browser = p.chromium.launch(headless=True)
               page = browser.new_page()
 
-              print("Opening website...")
+              print("Opening Maktabkhooneh...")
+
               page.goto(
                   "https://mirza.maktabkhooneh.org/courses",
                   wait_until="networkidle"
               )
 
-              print("URL:", page.url)
+              print("Initial URL:", page.url)
               print("Title:", page.title())
 
-              # فعلاً فقط صفحه را باز می‌کنیم
-              # بعد از بررسی فرم ورود، فیلدهای صحیح را اضافه می‌کنیم.
+              # نمایش اطلاعات کلی فرم‌ها برای پیدا کردن فیلد ورود
+              print("Inputs:")
+
+              for i, element in enumerate(page.locator("input").all()):
+                  try:
+                      print(
+                          i,
+                          "type=", element.get_attribute("type"),
+                          "name=", element.get_attribute("name"),
+                          "placeholder=", element.get_attribute("placeholder")
+                      )
+                  except:
+                      pass
+
+              print("Login page inspection completed.")
 
               browser.close()
           PY
