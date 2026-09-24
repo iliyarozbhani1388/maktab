@@ -4,14 +4,44 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  login:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Test
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Playwright
         run: |
-          echo "GitHub Actions is working!"
-          echo "Starting test..."
-          df -h
-          free -h
-          python --version
+          pip install playwright
+          playwright install --with-deps chromium
+
+      - name: Open Maktabkhooneh
+        run: |
+          cat > script.py <<'PY'
+          import os
+          from playwright.sync_api import sync_playwright
+
+          USERNAME = "09198631546"
+          PASSWORD = "Iliya123&"
+
+          with sync_playwright() as p:
+              browser = p.chromium.launch(headless=True)
+              page = browser.new_page()
+
+              print("Opening Maktabkhooneh...")
+
+              page.goto(
+                  "https://mirza.maktabkhooneh.org/courses",
+                  wait_until="networkidle"
+              )
+
+              print("Page opened successfully")
+              print("Current URL:", page.url)
+
+              browser.close()
+          PY
+
+          python script.py
