@@ -4,26 +4,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  login:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install Playwright
+      - name: Test
         run: |
-          pip install playwright
-          playwright install --with-deps chromium
-
-      - name: Run automation
-        env:
-          MAKTAB_USERNAME: ${{ secrets.MAKTAB_USERNAME }}
-          MAKTAB_PASSWORD: ${{ secrets.MAKTAB_PASSWORD }}
-        run: |
-          python automation.py
+          echo "GitHub Actions is working!"
+          echo "Starting test..."
+          df -h
+          free -h
+          python --version
